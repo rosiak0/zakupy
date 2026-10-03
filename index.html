@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wspólna Lista Zakupów</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --completed-color: #64748b;
+            --danger-color: #f43f5e;
+            --success-color: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        .actions-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 12px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .buttons-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+            align-items: center;
+        }
+
+        @media (min-width: 640px) {
+            .buttons-group {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .actions-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 16px 20px;
+            }
+            .buttons-group {
+                width: auto;
+            }
+        }
+
+        .status-indicator {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .status-sync { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-local { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-error { background-color: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 640px) {
+            button {
+                width: auto;
+            }
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button.btn-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        button.btn-success:hover {
+            background-color: var(--success-color);
+            color: #ffffff;
+        }
+
+        button.btn-primary {
+            background-color: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+        button.btn-primary:hover {
+            background-color: #6366f1;
+            color: #ffffff;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .category-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .category-title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .badge-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            flex-grow: 1;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .item-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .item-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+            gap: 8px;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex-grow: 1;
+            min-width: 0; 
+        }
+
+        .item-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            transition: color 0.2s, opacity 0.2s;
+            font-size: 0.95rem;
+            word-break: break-word;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .item-text.completed {
+            text-decoration: line-through;
+            color: var(--completed-color);
+            opacity: 0.7;
+        }
+
+        .item-actions-inline {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .item-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px 6px;
+            opacity: 0.6;
+            transition: all 0.2s;
+            width: auto;
+        }
+
+        .item-action-btn:hover {
+            opacity: 1;
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .item-action-btn.delete-btn:hover {
+            color: var(--danger-color);
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .add-item-input {
+            flex-grow: 1;
+            padding: 9px 12px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .add-item-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .add-category-section {
+            margin-top: 30px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .add-category-section h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+            width: 100%;
+        }
+
+        .add-category-section input {
+            padding: 10px 14px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            flex-grow: 1;
+            font-size: 0.9rem;
+        }
+        .add-category-section input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Wspólna Lista Zakupów</h1>
+    </header>
+
+    <div class="actions-bar">
+        <div class="buttons-group">
+            <button onclick="syncWithCloud(true)" class="btn-success">Odśwież / Pobierz</button>
+            <button onclick="startNewShopping()" class="btn-primary">Nowe zakupy (zaznacz wszystkie)</button>
+        </div>
+        <div id="syncStatus" class="status-indicator status-local">Tryb lokalny (skonfiguruj JSONBin)</div>
+    </div>
+
+    <div class="categories-grid" id="categoriesGrid">
+        <!-- Rendered via JS -->
+    </div>
+
+    <div class="add-category-section">
+        <h3>Dodaj nową kategorię</h3>
+        <input type="text" id="newCategoryName" placeholder="Nazwa kategorii (np. Chemia domowa)...">
+        <button onclick="addNewCategory()" class="btn-primary">Dodaj kategorię</button>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// KONFIGURACJA CHMURY (JSONBin.io)
+// ==========================================
+const BIN_ID = '6ac1461cffd5d1605349fa44'; // np. '65f1234abcd...'
+const API_KEY = '$2a$10$7cEzD4gDM5s4pUldEXcgYuO1un5Ke60kRjW11W5cfbVsbkztcPXqq'; // np. '$2a$10$...'
+// ==========================================
+
+const initialData = {
+    "Owoce i warzywa 🥬🥦🌽🍅": [
+        "Kiwi 🥝", "Kapusta kiszona 1kg albo 2kg", "Mandarynki 🍊", "Cytryna 🍋", 
+        "Gruszki 🍐", "Sałata rzymska albo zwykła", "Banany 🍌", "Awokado 🥑 tylko jak miękkie", 
+        "Jabłka *4-5 🍎", "Fasolka żółta lub zielona", "Szpinak", "Salata 🥬 (lodowa główka albo paczkowana *2)", 
+        "Pomidory koktajlowe 🍅 do sałatki", "Pomidory malinowe", "Granat", "Marchewka *5 🥕", 
+        "Ogórek zielony 🥒", "Włoszczyzna", "Bakłażan 🍆", "Brokuły", "Papryka czerwona", 
+        "Ziemniaki 🥔 x dużo", "Cukinia", "Buraki *5", "Limonki", "Szpinak baby", 
+        "Dynia hokkaido", "Pomarańcze 🟠", "Kapusta kiszona", "Pieczarki", "Winogrona bez pestek", 
+        "Borówki", "Maliny", "Pomidory 🍅", "Nektarynki"
+    ],
+    "Mięso śniadanie kolacja 🍔": [
+        "Szynka sopocka", "Kindziuk", "Salami", "Kiełbasa jak od dziadka", 
+        "Prosciutto crudo x2", "Frankfurterki", "Parówki sokoliki", "Kabanosy drobiowe", 
+        "Kielbasa Myśliwska", "Karkówka", "Wędlina premium *3", "Parówki", 
+        "Łosoś wędzony", "🥓 boczek", "śledź w oleju x2 🐟"
+    ],
+    "Nabiał 🐄": [
+        "Feta *2", "Śmietana 30% 2 wielkie", "Cheddar 10 msc.", "Gran padano 🧀", 
+        "Haloumi ser", "Almette *2", "Masło *3", "Jogurt naturalny", 
+        "Ser żółty w kostce", "Actimel truskawkowy", "Jogurciki", "Camembert", 
+        "Ser żółty w plastrach 🧀", "Ser radamer w kostce", "Mleko *2 🥛", 
+        "Masło Kasia do pieczenia x2", "Mozzarella", "Ser z pleśnią", 
+        "Twaróg półtłusty", "Śmietana 18% *1", "śmietanka kremówka 36 proc (przy cukrze i mące) 500ml", 
+        "Masło osełka", "900 g serka Philadelphia"
+    ],
+    "Mięso i ryby 🍖🍗": [
+        "Coś do rosołu", "Żeberka", "Polędwiczka wieprzowa", "Bioderka x3", 
+        "Schab do pieczenia", "2x indyk (lub jeden większy) 🦃", "Piersi z Kurczaka (duże opakowanie, nawet *2)", 
+        "Łosoś 🐟", "Mięso mielone 🍝", "Bioderka lub nogi z kurczaka 🍗 x3", "Kurczak do zupy 🐓", 
+        "Wołowina gulaszowa x2", "Karkówka"
+    ],
+    "Pieczywo 🍞": [
+        "Chleb", "Kajzerki", "Bułeczki maślane", "Tostowe 🥪", "Bagietki", "Tortilla"
+    ],
+    "Suche 🍚☕☕": [
+        "Mąka pszenna tortowa, szymanowska", "Papryka mielona słodka breath of", "Makaron rosołowy", 
+        "Spaghetti express", "Makaron kokardki x2", "Cukier trzcinowy", "Kuskus", 
+        "Budyń 🍮🍮", "Sól himalajska ⛰️", "Cukier 🍬", "Krakersiki", "Ocet", 
+        "Pestki słonecznika", "Spaghetti cienki", "Nerkowiec", "Herbata", "Żurawina suszona", 
+        "Paluszki grissini 🌾", "Kapary", "Groszek w puszce 🫛", "Makaron rurki lub kokardki *2 🍝", 
+        "Fasola czerwona ok", "Masło orzechowe bez kawałków orzechów, gładkie 🥜", "Ananas w puszce", 
+        "Miód 🐝", "Pestki z dyni", "Płatki Cheerios", "Jajka 🥚 X2", "oliwki zielone nadziewane", 
+        "Dżem truskawkowy", "Orzechy włoskie", "Rodzynki", "Płatki owsiane górskie", 
+        "Majonez (Winiary)", "Kawa Tchibo", "Dżem wiśniowy", "Czipsy", "Mąka ryżowa", 
+        "Piwo", "Paluszki", "Rybki słone", "Kawa", "Bułka tarta", "Makaron ryżowy", 
+        "Granola z czekoladą mleczną, banany 🧋", "Panierka panko", "Jabłka suszone", 
+        "Batony twix", "Nutella", "Ketchup ♨️", "Bakalie", "Groszek z marchewką w słoiku", 
+        "Ryż biały 🍚", "Słodka papryka przyprawa", "Sos pomidorowy *3 🍅 mutti", "Kasza manna", 
+        "Suszone pomidory", "Sok w kartonie (multiwitamina) *2", "Tuńczyk w sosie własnym 🐟", 
+        "Kukurydza w puszce 🌽", "Konfitura 🫙 wiśniowa", "Pringles", "Wino białe", 
+        "Mąka pszenna zwykła", "Sok malinowy", "Cukier wanilinowy"
+    ],
+    "Mrożone 🧊❄️🥶": [
+        "Marcheweczki 🥕", "Lody", "Fasolka zielona", "Frytki", "Wafle ryżowe", 
+        "Trio warzywne", "Paluszki rybne"
+    ],
+    "Chemia 🧪": [
+        "Kaszka", "Mokre chusteczki", "Tubki", "Balony", "Kulki", "Witaminki rozpuszczalne", 
+        "Proszek do prania kolorowego Vizir/Ariel/Persil", "Duży ręcznik papierowy", 
+        "Chusteczki nawilżane", "Papier toaletowy", "Żel pod pryschic", "Płyn do prania Silan niebieski", 
+        "Proszek do prania kolor", "Mała paczka pieluch dada 3 🐥", "Mydło", "Kwasek cytrynowy x10", 
+        "Waciki płatki do twarzy", "Dezodorant", "Chusteczki ppl", "Ziemia kwiatowa", 
+        "Tabletki do zmywarki zelowe", "Sól do zmywarki", "Gąbka", "Woda", "Ściereczka", 
+        "Ręczniki papierowe", "Szampon Pantene duza", "Odżywka Pantene duza", "Pasta do zębów", 
+        "Worki na śmieci 60l ciemne", "Elektrolity"
+    ]
+};
+
+let shoppingData = {};
+
+function isConfigured() {
+    return BIN_ID && BIN_ID !== 'TUTAJ_WKLEJ_SWOJ_BIN_ID' && API_KEY && !API_KEY.includes('TUTAJ_WKLEJ');
+}
+
+function updateStatus(text, type) {
+    const el = document.getElementById('syncStatus');
+    el.textContent = text;
+    el.className = `status-indicator status-${type}`;
+}
+
+async function syncWithCloud(showAlert = false) {
+    if (!isConfigured()) {
+        loadLocalFallback();
+        if (showAlert) alert("Chmura JSONBin nie jest skonfigurowana. Uzupełnij zmienne BIN_ID i API_KEY w kodzie.");
+        return;
+    }
+
+    updateStatus("Pobieranie z chmury...", "local");
+    try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { 'X-Master-Key': API_KEY }
+        });
+        if (!response.ok) throw new Error("Błąd sieci");
+        const resData = await response.json();
+        if (resData && resData.record) {
+            shoppingData = resData.record;
+            saveLocal();
+            render();
+            updateStatus("Zsynchronizowano z chmurą", "sync");
+            if (showAlert) alert("Lista została pobrana i zsynchronizowana!");
+        }
+    } catch (e) {
+        updateStatus("Błąd synchronizacji (tryb offline)", "error");
+        loadLocalFallback();
+        if (showAlert) alert("Nie udało się połączyć z chmurą. Załadowano wersję lokalną.");
+    }
+}
+
+async function saveToCloud() {
+    saveLocal(); 
+    if (!isConfigured()) return;
+
+    try {
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(shoppingData)
+        });
+        updateStatus("Zsynchronizowano z chmurą", "sync");
+    } catch (e) {
+        updateStatus("Zapisano lokalnie (błąd chmury)", "error");
+    }
+}
+
+function loadLocalFallback() {
+    const saved = localStorage.getItem('simple_shopping_list_data_v14');
+    if (saved) {
+        try {
+            shoppingData = JSON.parse(saved);
+        } catch (e) {
+            shoppingData = JSON.parse(JSON.stringify(initialData));
+        }
+    } else {
+        shoppingData = JSON.parse(JSON.stringify(initialData));
+    }
+    render();
+    if (!isConfigured()) {
+        updateStatus("Tryb lokalny (skonfiguruj JSONBin)", "local");
+    }
+}
+
+function saveLocal() {
+    localStorage.setItem('simple_shopping_list_data_v14', JSON.stringify(shoppingData));
+}
+
+function startNewShopping() {
+    if (confirm("Rozpocząć nowe zakupy? Wszystkie artykuły zostaną zaznaczone (skreślone), aby można je było odznaczać w trakcie zakupów.")) {
+        Object.keys(shoppingData).forEach(cat => {
+            shoppingData[cat] = shoppingData[cat].map(i => {
+                let name = typeof i === 'string' ? i : i.name;
+                return { name: name, completed: true };
+            });
+        });
+        saveToCloud();
+        render();
+    }
+}
+
+function toggleItem(category, index) {
+    let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+    items[index].completed = !items[index].completed;
+    shoppingData[category] = items;
+    saveToCloud();
+    render();
+}
+
+function editItem(category, index) {
+    let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+    let currentName = items[index].name;
+    let newName = prompt("Edytuj nazwę artykułu:", currentName);
+    if (newName !== null) {
+        newName = newName.trim();
+        if (newName !== "") {
+            items[index].name = newName;
+            shoppingData[category] = items;
+            saveToCloud();
+            render();
+        } else {
+            alert("Nazwa artykułu nie może być pusta!");
+        }
+    }
+}
+
+function deleteItem(category, index) {
+    let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+    items.splice(index, 1);
+    shoppingData[category] = items;
+    saveToCloud();
+    render();
+}
+
+function addItem(category, event) {
+    event.preventDefault();
+    const input = document.getElementById(`input-${category}`);
+    const val = input.value.trim();
+    if (val) {
+        let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+        items.push({ name: val, completed: false });
+        shoppingData[category] = items;
+        input.value = '';
+        saveToCloud();
+        render();
+    }
+}
+
+function addNewCategory() {
+    const input = document.getElementById('newCategoryName');
+    const catName = input.value.trim();
+    if (catName) {
+        if (shoppingData[catName]) {
+            alert("Taka kategoria już istnieje!");
+            return;
+        }
+        shoppingData[catName] = [];
+        input.value = '';
+        saveToCloud();
+        render();
+    }
+}
+
+function render() {
+    const grid = document.getElementById('categoriesGrid');
+    grid.innerHTML = '';
+
+    const categories = Object.keys(shoppingData);
+
+    categories.forEach(category => {
+        let items = shoppingData[category] || [];
+        items = items.map(item => {
+            if (typeof item === 'string') {
+                return { name: item, completed: false };
+            }
+            return item;
+        });
+
+        items.sort((a, b) => {
+            if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+            }
+            return a.name.localeCompare(b.name, 'pl', { sensitivity: 'base' });
+        });
+
+        shoppingData[category] = items;
+
+        const card = document.createElement('div');
+        card.className = 'category-card';
+
+        const remainingCount = items.filter(i => !i.completed).length;
+        const totalCount = items.length;
+
+        let itemsHtml = '';
+        items.forEach((item, index) => {
+            const completedClass = item.completed ? 'completed' : '';
+            const checkedAttr = item.completed ? 'checked' : '';
+            itemsHtml += `
+                <li class="item-row">
+                    <div class="item-content" onclick="toggleItem('${category.replace(/'/g, "\\'")}', ${index})">
+                        <input type="checkbox" class="item-checkbox" ${checkedAttr} onclick="event.stopPropagation(); toggleItem('${category.replace(/'/g, "\\'")}', ${index})">
+                        <span class="item-text ${completedClass}" title="Kliknij dwukrotnie, aby edytować" ondblclick="event.stopPropagation(); editItem('${category.replace(/'/g, "\\'")}', ${index})">${escapeHtml(item.name)}</span>
+                    </div>
+                    <div class="item-actions-inline">
+                        <button class="item-action-btn" title="Edytuj nazwę" onclick="editItem('${category.replace(/'/g, "\\'")}', ${index})">✏️</button>
+                        <button class="item-action-btn delete-btn" title="Usuń artykuł" onclick="deleteItem('${category.replace(/'/g, "\\'")}', ${index})">&times;</button>
+                    </div>
+                </li>
+            `;
+        });
+
+        card.innerHTML = `
+            <div class="category-header">
+                <div class="category-title-wrapper">
+                    <h2 class="category-title">${escapeHtml(category)}</h2>
+                    <span class="badge-count">Do kupienia: ${remainingCount} / ${totalCount}</span>
+                </div>
+            </div>
+            <ul class="item-list">
+                ${itemsHtml || '<li style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 10px;">Brak artykułów</li>'}
+            </ul>
+            <form class="add-item-form" onsubmit="addItem('${category.replace(/'/g, "\\'")}', event)">
+                <input type="text" id="input-${category}" class="add-item-input" placeholder="Dodaj artykuł...">
+                <button type="submit" class="btn-primary">+</button>
+            </form>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+loadLocalFallback();
+if (isConfigured()) {
+    syncWithCloud(false);
+}
+</script>
+
+</body>
+</html>
