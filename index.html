@@ -17,6 +17,7 @@
             --completed-color: #64748b;
             --danger-color: #f43f5e;
             --success-color: #10b981;
+            --warning-color: #f59e0b;
         }
 
         body {
@@ -35,7 +36,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         h1 {
@@ -49,10 +50,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             gap: 12px;
             background: var(--card-bg);
-            padding: 20px;
+            padding: 16px 20px;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
@@ -75,7 +76,6 @@
             .actions-bar {
                 flex-direction: row;
                 justify-content: space-between;
-                padding: 16px 20px;
             }
         }
 
@@ -133,7 +133,85 @@
             color: #ffffff;
         }
 
-        /* Sekcja Przepisów */
+        button.btn-accent {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+        button.btn-accent:hover {
+            background-color: var(--accent-color);
+            color: #0f172a;
+        }
+
+        /* Globalny panel wyszukiwania i dodawania na górze */
+        .global-search-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .global-search-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .global-search-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .global-search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Panel wyboru kategorii dla nowego produktu z głównego paska */
+        .global-item-prompt {
+            display: none;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .global-item-prompt.visible {
+            display: flex;
+        }
+
+        .global-item-prompt p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .prompt-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .prompt-controls select {
+            padding: 8px 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            flex-grow: 1;
+        }
+
+        /* Sekcja Przepisów (zwijana) */
         .recipes-section {
             background: var(--card-bg);
             border-radius: 14px;
@@ -141,14 +219,32 @@
             border: 1px solid var(--border-color);
             padding: 20px;
             margin-bottom: 30px;
+            display: none;
         }
 
-        .recipes-section h2 {
-            margin-top: 0;
-            font-size: 1.3rem;
-            color: var(--primary-color);
+        .recipes-section.open {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .recipes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .recipes-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--primary-color);
         }
 
         .recipes-grid {
@@ -228,7 +324,7 @@
         .temp-ingredients-list {
             list-style: none;
             padding: 0;
-            margin: 0 0 10px 0;
+            margin: 0 0 12px 0;
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
@@ -299,9 +395,9 @@
         .item-list {
             list-style: none;
             padding: 0;
-            margin: 0 0 15px 0;
+            margin: 0;
             flex-grow: 1;
-            max-height: 350px;
+            max-height: 380px;
             overflow-y: auto;
         }
 
@@ -384,27 +480,6 @@
             color: var(--danger-color);
         }
 
-        .add-item-form {
-            display: flex;
-            gap: 8px;
-            margin-top: auto;
-        }
-
-        .add-item-input {
-            flex-grow: 1;
-            padding: 9px 12px;
-            background: #0f172a;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .add-item-input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
         .add-category-section {
             margin-top: 30px;
             background: var(--card-bg);
@@ -433,31 +508,50 @@
             flex-grow: 1;
             font-size: 0.9rem;
         }
-
-        .add-category-section input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Wspólna Lista Zakupów i Przepisy</h1>
+        <h1>Wspólna Lista Zakupów</h1>
     </header>
 
     <div class="actions-bar">
         <div class="buttons-group">
+            <button onclick="toggleRecipesSection()" id="toggleRecipesBtn" class="btn-accent">🍲 Dania i Przepisy</button>
             <button onclick="syncWithCloud(true)" class="btn-success">Odśwież / Pobierz</button>
             <button onclick="startNewShopping()" class="btn-primary">Nowe zakupy (zaznacz wszystkie)</button>
         </div>
         <div id="syncStatus" class="status-indicator status-local">Tryb lokalny (skonfiguruj JSONBin)</div>
     </div>
 
-    <!-- SEKCJA PRZEPISÓW -->
-    <div class="recipes-section">
-        <h2>🍲 Moje Dania i Przepisy</h2>
+    <!-- JEDNO GŁÓWNE OKIENKO WYSZUKIWANIA I DODAWANIA NA GÓRZE -->
+    <div class="global-search-container">
+        <div class="global-search-bar">
+            <input type="text" id="globalSearchInput" list="globalSearchList" class="global-search-input" placeholder="🔍 Szukaj artykułu, odznaczaj lub wpisz nowy..." onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGlobalSearchInput();}">
+            <datalist id="globalSearchList"></datalist>
+            <button type="button" onclick="handleGlobalSearchInput()" class="btn-primary">Dodaj / Odznacz</button>
+        </div>
+
+        <!-- Panel wyboru kategorii dla nowego produktu -->
+        <div class="global-item-prompt" id="globalItemPrompt">
+            <p id="globalItemPromptLabel">Nowy produkt! Wybierz kategorię na liście zakupów:</p>
+            <div class="prompt-controls">
+                <select id="globalItemCategorySelect"></select>
+                <button type="button" onclick="confirmGlobalItem()" class="btn-success">Dodaj do kategorii</button>
+                <button type="button" onclick="cancelGlobalItem()" class="item-action-btn delete-btn">Anuluj</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZWIJANA SEKCJA PRZEPISÓW -->
+    <div class="recipes-section" id="recipesSection">
+        <div class="recipes-header">
+            <h2>🍲 Moje Dania i Przepisy</h2>
+            <button onclick="toggleRecipesSection()" class="item-action-btn" title="Zwiń panel" style="font-size: 1.4rem;">&times;</button>
+        </div>
+        
         <div class="recipes-grid" id="recipesGrid">
             <!-- Rendered via JS -->
         </div>
@@ -468,21 +562,28 @@
                 <input type="text" id="newRecipeName" placeholder="Nazwa dania (np. Spaghetti Carbonara)...">
             </div>
             <div class="recipe-form-row">
-                <select id="recipeCategorySelect" onchange="updateRecipeAutocomplete()">
-                    <!-- Categories -->
-                </select>
-                <input type="text" id="recipeIngredientInput" list="recipeAutocompleteList" placeholder="Składnik (wpisuj, podpowiada z kategorii)...">
-                <datalist id="recipeAutocompleteList"></datalist>
-                <button onclick="addIngredientToTempRecipe()" class="btn-primary">+ Dodaj składnik</button>
+                <input type="text" id="recipeIngredientInput" list="globalIngredientsList" placeholder="Składnik (szuka we wszystkich kategoriach)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); handleAddRecipeIngredient();}">
+                <datalist id="globalIngredientsList"></datalist>
+                <button type="button" onclick="handleAddRecipeIngredient()" class="btn-primary">+ Dodaj składnik</button>
             </div>
+
+            <div class="global-item-prompt" id="newItemCategoryPrompt">
+                <p id="newItemPromptLabel">Nowy produkt! Wybierz kategorię:</p>
+                <div class="prompt-controls">
+                    <select id="newItemCategorySelect"></select>
+                    <button type="button" onclick="confirmNewIngredientCategory()" class="btn-success">Potwierdź</button>
+                    <button type="button" onclick="cancelNewIngredientCategory()" class="item-action-btn delete-btn">Anuluj</button>
+                </div>
+            </div>
+
             <ul class="temp-ingredients-list" id="tempIngredientsList">
-                <span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Dodaj składniki powyżej.</span>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Wpisz składnik powyżej.</span>
             </ul>
-            <button onclick="saveNewRecipe()" class="btn-success" style="width: 100%;">Zapisz przepis</button>
+            <button type="button" onclick="saveNewRecipe()" class="btn-success" style="width: 100%;">Zapisz przepis</button>
         </div>
     </div>
 
-    <!-- SEKCJA LISTY ZAKUPÓW -->
+    <!-- SEKCJA LISTY ZAKUPÓW (BEZ FORMULARZY W KAFELKACH) -->
     <div class="categories-grid" id="categoriesGrid">
         <!-- Rendered via JS -->
     </div>
@@ -729,6 +830,8 @@ const initialRecipes = {
 let shoppingData = {};
 let recipesData = {};
 let tempRecipeIngredients = [];
+let pendingGlobalItemName = "";
+let pendingNewIngredientName = "";
 
 function isConfigured() {
     return BIN_ID && BIN_ID !== 'TUTAJ_WKLEJ_SWOJ_BIN_ID' && API_KEY && !API_KEY.includes('TUTAJ_WKLEJ');
@@ -738,6 +841,17 @@ function updateStatus(text, type) {
     const el = document.getElementById('syncStatus');
     el.textContent = text;
     el.className = `status-indicator status-${type}`;
+}
+
+function toggleRecipesSection() {
+    const sec = document.getElementById('recipesSection');
+    const btn = document.getElementById('toggleRecipesBtn');
+    sec.classList.toggle('open');
+    if (sec.classList.contains('open')) {
+        btn.textContent = '🍲 Ukryj Przepisy';
+    } else {
+        btn.textContent = '🍲 Dania i Przepisy';
+    }
 }
 
 async function syncWithCloud(showAlert = false) {
@@ -765,7 +879,7 @@ async function syncWithCloud(showAlert = false) {
             saveLocal();
             render();
             updateStatus("Zsynchronizowano z chmurą", "sync");
-            if (showAlert) alert("Dane zostały pobrane i zsynchronizowana!");
+            if (showAlert) alert("Dane zostały pobrane i zsynchronizowane!");
         }
     } catch (e) {
         updateStatus("Błąd synchronizacji (tryb offline)", "error");
@@ -794,8 +908,8 @@ async function saveToCloud() {
 }
 
 function loadLocalFallback() {
-    const savedShopping = localStorage.getItem('app_shopping_data_v19');
-    const savedRecipes = localStorage.getItem('app_recipes_data_v19');
+    const savedShopping = localStorage.getItem('app_shopping_data_v21');
+    const savedRecipes = localStorage.getItem('app_recipes_data_v21');
 
     shoppingData = savedShopping ? JSON.parse(savedShopping) : JSON.parse(JSON.stringify(initialData));
     recipesData = savedRecipes ? JSON.parse(savedRecipes) : JSON.parse(JSON.stringify(initialRecipes));
@@ -807,49 +921,200 @@ function loadLocalFallback() {
 }
 
 function saveLocal() {
-    localStorage.setItem('app_shopping_data_v19', JSON.stringify(shoppingData));
-    localStorage.setItem('app_recipes_data_v19', JSON.stringify(recipesData));
+    localStorage.setItem('app_shopping_data_v21', JSON.stringify(shoppingData));
+    localStorage.setItem('app_recipes_data_v21', JSON.stringify(recipesData));
 }
 
-// Logika przepisów
-function updateCategorySelectOptions() {
-    const select = document.getElementById('recipeCategorySelect');
-    if (!select) return;
-    select.innerHTML = '';
-    Object.keys(shoppingData).forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        select.appendChild(opt);
-    });
-    updateRecipeAutocomplete();
-}
-
-function updateRecipeAutocomplete() {
-    const cat = document.getElementById('recipeCategorySelect').value;
-    const datalist = document.getElementById('recipeAutocompleteList');
-    if (!datalist) return;
-    datalist.innerHTML = '';
+// Globalne autouzupełnianie (zarówno dla głównego paska wyszukiwania, jak i przepisów)
+function updateAllAutocompletes() {
+    const globalDatalist = document.getElementById('globalSearchList');
+    const globalCatSelect = document.getElementById('globalItemCategorySelect');
     
-    if (shoppingData[cat]) {
-        shoppingData[cat].forEach(item => {
-            let itemName = typeof item === 'string' ? item : item.name;
-            const opt = document.createElement('option');
-            opt.value = itemName;
-            datalist.appendChild(opt);
-        });
+    const recipeDatalist = document.getElementById('globalIngredientsList');
+    const recipeCatSelect = document.getElementById('newItemCategorySelect');
+
+    if (!globalDatalist || !globalCatSelect) return;
+
+    globalDatalist.innerHTML = '';
+    globalCatSelect.innerHTML = '';
+    if (recipeDatalist) recipeDatalist.innerHTML = '';
+    if (recipeCatSelect) recipeCatSelect.innerHTML = '';
+
+    Object.keys(shoppingData).forEach(cat => {
+        // Selecty kategorii do nowych produktów
+        const opt1 = document.createElement('option');
+        opt1.value = cat;
+        opt1.textContent = cat;
+        globalCatSelect.appendChild(opt1);
+
+        if (recipeCatSelect) {
+            const opt2 = document.createElement('option');
+            opt2.value = cat;
+            opt2.textContent = cat;
+            recipeCatSelect.appendChild(opt2);
+        }
+
+        // Elementy listy
+        if (shoppingData[cat]) {
+            shoppingData[cat].forEach(item => {
+                let itemName = typeof item === 'string' ? item : item.name;
+                
+                const optGlobal = document.createElement('option');
+                optGlobal.value = `${itemName} [${cat}]`;
+                globalDatalist.appendChild(optGlobal);
+
+                if (recipeDatalist) {
+                    const optRecipe = document.createElement('option');
+                    optRecipe.value = `${itemName} [${cat}]`;
+                    recipeDatalist.appendChild(optRecipe);
+                }
+            });
+        }
+    });
+}
+
+// Obsługa głównego paska wyszukiwania / dodawania / odznaczania na górze
+function handleGlobalSearchInput() {
+    const input = document.getElementById('globalSearchInput');
+    const rawVal = input.value.trim();
+    if (!rawVal) return;
+
+    // 1. Sprawdź format z nawiasem kwadratowym np. "Mleko [Nabiał]"
+    const bracketMatch = rawVal.match(/^(.*)\s+\[(.*)\]$/);
+    if (bracketMatch) {
+        const extractedName = bracketMatch[1].trim();
+        const extractedCat = bracketMatch[2].trim();
+        if (shoppingData[extractedCat]) {
+            let items = shoppingData[extractedCat].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+            let existing = items.find(i => i.name.toLowerCase() === extractedName.toLowerCase());
+            if (existing) {
+                existing.completed = false; // Odznacz (wraca do listy do kupienia)
+            } else {
+                items.push({ name: extractedName, completed: false });
+            }
+            shoppingData[extractedCat] = items;
+            input.value = '';
+            cancelGlobalItem();
+            saveToCloud();
+            render();
+            return;
+        }
+    }
+
+    // 2. Szukaj dokładnego dopasowania nazwy w dowolnej kategorii
+    let foundCat = null;
+    let exactName = rawVal;
+
+    for (const cat of Object.keys(shoppingData)) {
+        let items = shoppingData[cat].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+        const match = items.find(i => i.name.toLowerCase() === rawVal.toLowerCase());
+        if (match) {
+            foundCat = cat;
+            exactName = match.name;
+            break;
+        }
+    }
+
+    if (foundCat) {
+        let items = shoppingData[foundCat].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+        let existing = items.find(i => i.name.toLowerCase() === exactName.toLowerCase());
+        if (existing) {
+            existing.completed = false; // Odznacz, żeby był widoczny na górze do kupienia
+        }
+        shoppingData[foundCat] = items;
+        input.value = '';
+        cancelGlobalItem();
+        saveToCloud();
+        render();
+    } else {
+        // 3. Zupełnie nowy produkt -> pokaż panel wyboru kategorii na górze
+        pendingGlobalItemName = rawVal;
+        document.getElementById('globalItemPromptLabel').textContent = `Produkt "${rawVal}" nie istnieje. Wybierz kategorię, do której go dodać:`;
+        document.getElementById('globalItemPrompt').classList.add('visible');
     }
 }
 
-function addIngredientToTempRecipe() {
-    const cat = document.getElementById('recipeCategorySelect').value;
-    const input = document.getElementById('recipeIngredientInput');
-    const val = input.value.trim();
-    if (!val) return;
+function confirmGlobalItem() {
+    if (!pendingGlobalItemName) return;
+    const cat = document.getElementById('globalItemCategorySelect').value;
+    
+    if (!shoppingData[cat]) shoppingData[cat] = [];
+    let items = shoppingData[cat].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+    
+    items.push({ name: pendingGlobalItemName, completed: false });
+    shoppingData[cat] = items;
 
-    tempRecipeIngredients.push({ category: cat, name: val });
-    input.value = '';
+    pendingGlobalItemName = "";
+    document.getElementById('globalSearchInput').value = '';
+    document.getElementById('globalItemPrompt').classList.remove('visible');
+    saveToCloud();
+    render();
+}
+
+function cancelGlobalItem() {
+    pendingGlobalItemName = "";
+    document.getElementById('globalItemPrompt').classList.remove('visible');
+}
+
+// Logika składników w przepisach
+function handleAddRecipeIngredient() {
+    const input = document.getElementById('recipeIngredientInput');
+    const rawVal = input.value.trim();
+    if (!rawVal) return;
+
+    const bracketMatch = rawVal.match(/^(.*)\s+\[(.*)\]$/);
+    if (bracketMatch) {
+        const extractedName = bracketMatch[1].trim();
+        const extractedCat = bracketMatch[2].trim();
+        if (shoppingData[extractedCat]) {
+            tempRecipeIngredients.push({ category: extractedCat, name: extractedName });
+            input.value = '';
+            cancelNewIngredientCategory();
+            renderTempIngredients();
+            return;
+        }
+    }
+
+    let foundCat = null;
+    let exactName = rawVal;
+
+    for (const cat of Object.keys(shoppingData)) {
+        const match = shoppingData[cat].find(i => {
+            const name = typeof i === 'string' ? i : i.name;
+            return name.toLowerCase() === rawVal.toLowerCase();
+        });
+        if (match) {
+            foundCat = cat;
+            exactName = typeof match === 'string' ? match : match.name;
+            break;
+        }
+    }
+
+    if (foundCat) {
+        tempRecipeIngredients.push({ category: foundCat, name: exactName });
+        input.value = '';
+        cancelNewIngredientCategory();
+        renderTempIngredients();
+    } else {
+        pendingNewIngredientName = rawVal;
+        document.getElementById('newItemPromptLabel').textContent = `Produkt "${rawVal}" nie istnieje. Wybierz kategorię:`;
+        document.getElementById('newItemCategoryPrompt').classList.add('visible');
+    }
+}
+
+function confirmNewIngredientCategory() {
+    if (!pendingNewIngredientName) return;
+    const cat = document.getElementById('newItemCategorySelect').value;
+    tempRecipeIngredients.push({ category: cat, name: pendingNewIngredientName });
+    pendingNewIngredientName = "";
+    document.getElementById('recipeIngredientInput').value = '';
+    document.getElementById('newItemCategoryPrompt').classList.remove('visible');
     renderTempIngredients();
+}
+
+function cancelNewIngredientCategory() {
+    pendingNewIngredientName = "";
+    document.getElementById('newItemCategoryPrompt').classList.remove('visible');
 }
 
 function removeTempIngredient(index) {
@@ -861,7 +1126,7 @@ function renderTempIngredients() {
     const list = document.getElementById('tempIngredientsList');
     if (!list) return;
     if (tempRecipeIngredients.length === 0) {
-        list.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Dodaj składniki powyżej.</span>';
+        list.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Wpisz składnik powyżej.</span>';
         return;
     }
     list.innerHTML = '';
@@ -869,6 +1134,15 @@ function renderTempIngredients() {
         const li = document.createElement('li');
         li.className = 'temp-ingredient-tag';
         li.innerHTML = `[${ing.category.split(' ')[0]}] ${escapeHtml(ing.name)} <span onclick="removeTempIngredient(${idx})">&times;</span>`;
+        li.style.background = 'rgba(56, 189, 248, 0.15)';
+        li.style.color = 'var(--accent-color)';
+        li.style.padding = '4px 10px';
+        li.style.borderRadius = '15px';
+        li.style.fontSize = '0.8rem';
+        li.style.display = 'flex';
+        li.style.alignItems = 'center';
+        li.style.gap = '6px';
+        li.style.border = '1px solid rgba(56, 189, 248, 0.3)';
         list.appendChild(li);
     });
 }
@@ -888,6 +1162,7 @@ function saveNewRecipe() {
     recipesData[recipeName] = [...tempRecipeIngredients];
     nameInput.value = '';
     tempRecipeIngredients = [];
+    cancelNewIngredientCategory();
     renderTempIngredients();
     saveToCloud();
     render();
@@ -917,9 +1192,9 @@ function cookRecipe(recipeName) {
 
         let existing = shoppingData[cat].find(i => i.name.toLowerCase() === ingName.toLowerCase());
         if (existing) {
-            existing.completed = false; // Odznacz, żeby było do kupienia
+            existing.completed = false; 
         } else {
-            shoppingData[cat].push({ name: ingName, completed: false }); // Dodaj jako do kupienia
+            shoppingData[cat].push({ name: ingName, completed: false }); 
         }
     });
 
@@ -928,7 +1203,7 @@ function cookRecipe(recipeName) {
     alert(`Przepis "${recipeName}" został zastosowany! Składniki dodano/odznaczono na liście zakupów.`);
 }
 
-// Logika listy zakupów
+// Standardowe akcje listy zakupów
 function startNewShopping() {
     if (confirm("Rozpocząć nowe zakupy? Wszystkie artykuły zostaną zaznaczone (skreślone), aby można je było odznaczać w trakcie zakupów.")) {
         Object.keys(shoppingData).forEach(cat => {
@@ -973,25 +1248,6 @@ function deleteItem(category, index) {
     render();
 }
 
-function addItem(category, catIndex, event) {
-    event.preventDefault();
-    const input = document.getElementById(`input-${catIndex}`);
-    const val = input.value.trim();
-    if (val) {
-        let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
-        let existing = items.find(i => i.name.toLowerCase() === val.toLowerCase());
-        if (existing) {
-            existing.completed = false; // Odznacz, jeśli już istniał na liście
-        } else {
-            items.push({ name: val, completed: false });
-        }
-        shoppingData[category] = items;
-        input.value = '';
-        saveToCloud();
-        render();
-    }
-}
-
 function addNewCategory() {
     const input = document.getElementById('newCategoryName');
     const catName = input.value.trim();
@@ -1008,7 +1264,7 @@ function addNewCategory() {
 }
 
 function render() {
-    updateCategorySelectOptions();
+    updateAllAutocompletes();
 
     // Renderowanie przepisów
     const recipesGrid = document.getElementById('recipesGrid');
@@ -1036,11 +1292,11 @@ function render() {
         });
     }
 
-    // Renderowanie listy zakupów
+    // Renderowanie listy zakupów (bez formularzy w kafelkach)
     const grid = document.getElementById('categoriesGrid');
     grid.innerHTML = '';
 
-    Object.keys(shoppingData).forEach((category, catIndex) => {
+    Object.keys(shoppingData).forEach((category) => {
         let items = shoppingData[category] || [];
         items = items.map(item => typeof item === 'string' ? { name: item, completed: false } : item);
 
@@ -1074,11 +1330,6 @@ function render() {
             `;
         });
 
-        let datalistOptions = '';
-        items.forEach(item => {
-            datalistOptions += `<option value="${escapeHtml(item.name)}">`;
-        });
-
         card.innerHTML = `
             <div class="category-header">
                 <div class="category-title-wrapper">
@@ -1089,13 +1340,6 @@ function render() {
             <ul class="item-list">
                 ${itemsHtml || '<li style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 10px;">Brak artykułów</li>'}
             </ul>
-            <form class="add-item-form" onsubmit="addItem('${category.replace(/'/g, "\\'")}', ${catIndex}, event)">
-                <input type="text" id="input-${catIndex}" list="datalist-${catIndex}" class="add-item-input" placeholder="Dodaj lub wyszukaj...">
-                <datalist id="datalist-${catIndex}">
-                    ${datalistOptions}
-                </datalist>
-                <button type="submit" class="btn-primary">+</button>
-            </form>
         `;
 
         grid.appendChild(card);
