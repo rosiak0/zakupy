@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wspólna Lista Zakupów</title>
+    <title>Wspólna Lista Zakupów i Przepisy</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -54,7 +54,7 @@
             background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
         }
 
@@ -70,14 +70,12 @@
             .buttons-group {
                 flex-direction: row;
                 justify-content: center;
+                width: auto;
             }
             .actions-bar {
                 flex-direction: row;
                 justify-content: space-between;
                 padding: 16px 20px;
-            }
-            .buttons-group {
-                width: auto;
             }
         }
 
@@ -135,6 +133,125 @@
             color: #ffffff;
         }
 
+        /* Sekcja Przepisów */
+        .recipes-section {
+            background: var(--card-bg);
+            border-radius: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .recipes-section h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .recipe-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .recipe-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .recipe-ingredients-preview {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .recipe-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .recipe-actions button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            flex-grow: 1;
+        }
+
+        .add-recipe-box {
+            background: #0f172a;
+            border: 1px dashed var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .add-recipe-box h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .recipe-form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .recipe-form-row select, .recipe-form-row input {
+            padding: 9px 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+
+        .temp-ingredients-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .temp-ingredient-tag {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .temp-ingredient-tag span {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Siatka kategorii zakupów */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
@@ -149,11 +266,6 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            transition: box-shadow 0.2s ease;
-        }
-
-        .category-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         .category-header {
@@ -266,7 +378,6 @@
         .item-action-btn:hover {
             opacity: 1;
             color: var(--accent-color);
-            transform: scale(1.1);
         }
 
         .item-action-btn.delete-btn:hover {
@@ -287,7 +398,6 @@
             border-radius: 8px;
             color: var(--text-color);
             font-size: 0.9rem;
-            transition: border-color 0.2s;
         }
 
         .add-item-input:focus {
@@ -300,7 +410,6 @@
             background: var(--card-bg);
             padding: 20px;
             border-radius: 14px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
             display: flex;
             gap: 12px;
@@ -324,6 +433,7 @@
             flex-grow: 1;
             font-size: 0.9rem;
         }
+
         .add-category-section input:focus {
             outline: none;
             border-color: var(--accent-color);
@@ -334,7 +444,7 @@
 
 <div class="container">
     <header>
-        <h1>Wspólna Lista Zakupów</h1>
+        <h1>Wspólna Lista Zakupów i Przepisy</h1>
     </header>
 
     <div class="actions-bar">
@@ -345,6 +455,34 @@
         <div id="syncStatus" class="status-indicator status-local">Tryb lokalny (skonfiguruj JSONBin)</div>
     </div>
 
+    <!-- SEKCJA PRZEPISÓW -->
+    <div class="recipes-section">
+        <h2>🍲 Moje Dania i Przepisy</h2>
+        <div class="recipes-grid" id="recipesGrid">
+            <!-- Rendered via JS -->
+        </div>
+
+        <div class="add-recipe-box">
+            <h3>Dodaj nowe danie / przepis</h3>
+            <div class="recipe-form-row">
+                <input type="text" id="newRecipeName" placeholder="Nazwa dania (np. Spaghetti Carbonara)...">
+            </div>
+            <div class="recipe-form-row">
+                <select id="recipeCategorySelect" onchange="updateRecipeAutocomplete()">
+                    <!-- Categories -->
+                </select>
+                <input type="text" id="recipeIngredientInput" list="recipeAutocompleteList" placeholder="Składnik (wpisuj, podpowiada z kategorii)...">
+                <datalist id="recipeAutocompleteList"></datalist>
+                <button onclick="addIngredientToTempRecipe()" class="btn-primary">+ Dodaj składnik</button>
+            </div>
+            <ul class="temp-ingredients-list" id="tempIngredientsList">
+                <span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Dodaj składniki powyżej.</span>
+            </ul>
+            <button onclick="saveNewRecipe()" class="btn-success" style="width: 100%;">Zapisz przepis</button>
+        </div>
+    </div>
+
+    <!-- SEKCJA LISTY ZAKUPÓW -->
     <div class="categories-grid" id="categoriesGrid">
         <!-- Rendered via JS -->
     </div>
@@ -365,75 +503,232 @@ const API_KEY = '$2a$10$7cEzD4gDM5s4pUldEXcgYuO1un5Ke60kRjW11W5cfbVsbkztcPXqq'; 
 // ==========================================
 
 const initialData = {
-    "Owoce i warzywa 🥬🥦🌽🍅": [
-        "Kiwi 🥝", "Kapusta kiszona 1kg albo 2kg", "Mandarynki 🍊", "Cytryna 🍋", 
-        "Gruszki 🍐", "Sałata rzymska albo zwykła", "Banany 🍌", "Awokado 🥑 tylko jak miękkie", 
-        "Jabłka *4-5 🍎", "Fasolka żółta lub zielona", "Szpinak", "Salata 🥬 (lodowa główka albo paczkowana *2)", 
-        "Pomidory koktajlowe 🍅 do sałatki", "Pomidory malinowe", "Granat", "Marchewka *5 🥕", 
-        "Ogórek zielony 🥒", "Włoszczyzna", "Bakłażan 🍆", "Brokuły", "Papryka czerwona", 
-        "Ziemniaki 🥔 x dużo", "Cukinia", "Buraki *5", "Limonki", "Szpinak baby", 
-        "Dynia hokkaido", "Pomarańcze 🟠", "Kapusta kiszona", "Pieczarki", "Winogrona bez pestek", 
-        "Borówki", "Maliny", "Pomidory 🍅", "Nektarynki"
-    ],
-    "Mięso śniadanie kolacja 🍔": [
-        "Szynka sopocka", "Kindziuk", "Salami", "Kiełbasa jak od dziadka", 
-        "Prosciutto crudo x2", "Frankfurterki", "Parówki sokoliki", "Kabanosy drobiowe", 
-        "Kielbasa Myśliwska", "Karkówka", "Wędlina premium *3", "Parówki", 
-        "Łosoś wędzony", "🥓 boczek", "śledź w oleju x2 🐟"
-    ],
-    "Nabiał 🐄": [
-        "Feta *2", "Śmietana 30% 2 wielkie", "Cheddar 10 msc.", "Gran padano 🧀", 
-        "Haloumi ser", "Almette *2", "Masło *3", "Jogurt naturalny", 
-        "Ser żółty w kostce", "Actimel truskawkowy", "Jogurciki", "Camembert", 
-        "Ser żółty w plastrach 🧀", "Ser radamer w kostce", "Mleko *2 🥛", 
-        "Masło Kasia do pieczenia x2", "Mozzarella", "Ser z pleśnią", 
-        "Twaróg półtłusty", "Śmietana 18% *1", "śmietanka kremówka 36 proc (przy cukrze i mące) 500ml", 
-        "Masło osełka", "900 g serka Philadelphia"
-    ],
-    "Mięso i ryby 🍖🍗": [
-        "Coś do rosołu", "Żeberka", "Polędwiczka wieprzowa", "Bioderka x3", 
-        "Schab do pieczenia", "2x indyk (lub jeden większy) 🦃", "Piersi z Kurczaka (duże opakowanie, nawet *2)", 
-        "Łosoś 🐟", "Mięso mielone 🍝", "Bioderka lub nogi z kurczaka 🍗 x3", "Kurczak do zupy 🐓", 
-        "Wołowina gulaszowa x2", "Karkówka"
-    ],
-    "Pieczywo 🍞": [
-        "Chleb", "Kajzerki", "Bułeczki maślane", "Tostowe 🥪", "Bagietki", "Tortilla"
-    ],
-    "Suche 🍚☕☕": [
-        "Mąka pszenna tortowa, szymanowska", "Papryka mielona słodka breath of", "Makaron rosołowy", 
-        "Spaghetti express", "Makaron kokardki x2", "Cukier trzcinowy", "Kuskus", 
-        "Budyń 🍮🍮", "Sól himalajska ⛰️", "Cukier 🍬", "Krakersiki", "Ocet", 
-        "Pestki słonecznika", "Spaghetti cienki", "Nerkowiec", "Herbata", "Żurawina suszona", 
-        "Paluszki grissini 🌾", "Kapary", "Groszek w puszce 🫛", "Makaron rurki lub kokardki *2 🍝", 
-        "Fasola czerwona ok", "Masło orzechowe bez kawałków orzechów, gładkie 🥜", "Ananas w puszce", 
-        "Miód 🐝", "Pestki z dyni", "Płatki Cheerios", "Jajka 🥚 X2", "oliwki zielone nadziewane", 
-        "Dżem truskawkowy", "Orzechy włoskie", "Rodzynki", "Płatki owsiane górskie", 
-        "Majonez (Winiary)", "Kawa Tchibo", "Dżem wiśniowy", "Czipsy", "Mąka ryżowa", 
-        "Piwo", "Paluszki", "Rybki słone", "Kawa", "Bułka tarta", "Makaron ryżowy", 
-        "Granola z czekoladą mleczną, banany 🧋", "Panierka panko", "Jabłka suszone", 
-        "Batony twix", "Nutella", "Ketchup ♨️", "Bakalie", "Groszek z marchewką w słoiku", 
-        "Ryż biały 🍚", "Słodka papryka przyprawa", "Sos pomidorowy *3 🍅 mutti", "Kasza manna", 
-        "Suszone pomidory", "Sok w kartonie (multiwitamina) *2", "Tuńczyk w sosie własnym 🐟", 
-        "Kukurydza w puszce 🌽", "Konfitura 🫙 wiśniowa", "Pringles", "Wino białe", 
-        "Mąka pszenna zwykła", "Sok malinowy", "Cukier wanilinowy"
-    ],
-    "Mrożone 🧊❄️🥶": [
-        "Marcheweczki 🥕", "Lody", "Fasolka zielona", "Frytki", "Wafle ryżowe", 
-        "Trio warzywne", "Paluszki rybne"
-    ],
-    "Chemia 🧪": [
-        "Kaszka", "Mokre chusteczki", "Tubki", "Balony", "Kulki", "Witaminki rozpuszczalne", 
-        "Proszek do prania kolorowego Vizir/Ariel/Persil", "Duży ręcznik papierowy", 
-        "Chusteczki nawilżane", "Papier toaletowy", "Żel pod pryschic", "Płyn do prania Silan niebieski", 
-        "Proszek do prania kolor", "Mała paczka pieluch dada 3 🐥", "Mydło", "Kwasek cytrynowy x10", 
-        "Waciki płatki do twarzy", "Dezodorant", "Chusteczki ppl", "Ziemia kwiatowa", 
-        "Tabletki do zmywarki zelowe", "Sól do zmywarki", "Gąbka", "Woda", "Ściereczka", 
-        "Ręczniki papierowe", "Szampon Pantene duza", "Odżywka Pantene duza", "Pasta do zębów", 
-        "Worki na śmieci 60l ciemne", "Elektrolity"
+  "Owoce i warzywa 🥬🥦🌽🍅": [
+    { "name": "Awokado 🥑 tylko jak miękkie", "completed": true },
+    { "name": "Bakłażan 🍆", "completed": true },
+    { "name": "Banany 🍌", "completed": true },
+    { "name": "Borówki", "completed": true },
+    { "name": "Brokuły", "completed": true },
+    { "name": "Buraki *5", "completed": true },
+    { "name": "Cukinia", "completed": true },
+    { "name": "Cytryna 🍋", "completed": true },
+    { "name": "Dynia hokkaido", "completed": true },
+    { "name": "Fasolka żółta lub zielona", "completed": true },
+    { "name": "Granat", "completed": true },
+    { "name": "Gruszki 🍐", "completed": true },
+    { "name": "Jabłka *4-5 🍎", "completed": true },
+    { "name": "Kapusta kiszona", "completed": true },
+    { "name": "Kapusta kiszona 1kg albo 2kg", "completed": true },
+    { "name": "Kiwi 🥝", "completed": true },
+    { "name": "Limonki", "completed": true },
+    { "name": "Maliny", "completed": true },
+    { "name": "Mandarynki 🍊", "completed": true },
+    { "name": "Marchewka *4-5 🥕", "completed": true },
+    { "name": "Nektarynki", "completed": true },
+    { "name": "Ogórek zielony 🥒", "completed": true },
+    { "name": "Papryka czerwona", "completed": true },
+    { "name": "Pieczarki", "completed": true },
+    { "name": "Pomarańcze 🟠", "completed": true },
+    { "name": "Pomidory 🍅", "completed": true },
+    { "name": "Pomidory koktajlowe 🍅 do sałatki", "completed": true },
+    { "name": "Pomidory malinowe", "completed": true },
+    { "name": "Salata 🥬 (lodowa główka albo paczkowana *2)", "completed": true },
+    { "name": "Sałata rzymska albo zwykła", "completed": true },
+    { "name": "Szpinak", "completed": true },
+    { "name": "Szpinak baby", "completed": true },
+    { "name": "Winogrona bez pestek", "completed": true },
+    { "name": "Włoszczyzna", "completed": true },
+    { "name": "Ziemniaki 🥔 (6-8 zależnie od rozmiaru)", "completed": true }
+  ],
+  "Mięso śniadanie kolacja 🍔": [
+    { "name": "🥓 boczek", "completed": true },
+    { "name": "Frankfurterki", "completed": true },
+    { "name": "Kabanosy drobiowe", "completed": true },
+    { "name": "Kielbasa Myśliwska", "completed": true },
+    { "name": "Kiełbasa jak od dziadka", "completed": true },
+    { "name": "Kindziuk", "completed": true },
+    { "name": "Łosoś wędzony", "completed": true },
+    { "name": "Parówki", "completed": true },
+    { "name": "Parówki sokoliki", "completed": true },
+    { "name": "Prosciutto crudo x2", "completed": true },
+    { "name": "Salami", "completed": true },
+    { "name": "Szynka sopocka", "completed": true },
+    { "name": "śledź w oleju x2 🐟", "completed": true },
+    { "name": "Wędlina premium *3", "completed": true }
+  ],
+  "Nabiał 🐄": [
+    { "name": "900 g serka Philadelphia", "completed": false },
+    { "name": "Actimel truskawkowy", "completed": true },
+    { "name": "Almette *2", "completed": true },
+    { "name": "Camembert", "completed": true },
+    { "name": "Cheddar 10 msc.", "completed": true },
+    { "name": "Feta *2", "completed": true },
+    { "name": "Gran padano 🧀", "completed": true },
+    { "name": "Haloumi ser", "completed": true },
+    { "name": "Jogurciki", "completed": true },
+    { "name": "Jogurt naturalny", "completed": true },
+    { "name": "Masło *3", "completed": true },
+    { "name": "Masło Kasia do pieczenia x2", "completed": true },
+    { "name": "Masło osełka", "completed": true },
+    { "name": "Mleko *2 🥛", "completed": true },
+    { "name": "Mozzarella", "completed": true },
+    { "name": "Ser radamer w kostce", "completed": true },
+    { "name": "Ser z pleśnią", "completed": true },
+    { "name": "Ser żółty w kostce", "completed": true },
+    { "name": "Ser żółty w plastrach 🧀", "completed": true },
+    { "name": "Śmietana 18% *2", "completed": true },
+    { "name": "Śmietana 30% 2 wielkie", "completed": true },
+    { "name": "śmietanka kremówka 36 proc (przy cukrze i mące) 500ml", "completed": true },
+    { "name": "Twaróg półtłusty", "completed": true }
+  ],
+  "Mięso i ryby 🍖🍗": [
+    { "name": "2x indyk (lub jeden większy) 🦃", "completed": true },
+    { "name": "Bioderka lub nogi z kurczaka 🍗 x3", "completed": true },
+    { "name": "Bioderka x3", "completed": true },
+    { "name": "Coś do rosołu", "completed": true },
+    { "name": "Filet z dorsza", "completed": true },
+    { "name": "Karkówka", "completed": true },
+    { "name": "Kurczak do zupy 🐓", "completed": true },
+    { "name": "Łosoś 🐟", "completed": true },
+    { "name": "Mięso mielone 🍝", "completed": true },
+    { "name": "Piersi z Kurczaka (duże opakowanie, nawet *2)", "completed": true },
+    { "name": "Polędwiczka wieprzowa", "completed": true },
+    { "name": "Schab do pieczenia", "completed": true },
+    { "name": "Wołowina gulaszowa x3 (bo dwa trochę mało wychodzi)", "completed": true },
+    { "name": "Żeberka", "completed": true }
+  ],
+  "Pieczywo 🍞": [
+    { "name": "Bagietki", "completed": true },
+    { "name": "Bułeczki maślane", "completed": true },
+    { "name": "Bułka tarta", "completed": true },
+    { "name": "Chleb", "completed": true },
+    { "name": "Kajzerki", "completed": true },
+    { "name": "Tortilla", "completed": true },
+    { "name": "Tostowe 🥪", "completed": true }
+  ],
+  "Suche 🍚☕☕": [
+    { "name": "Liście laurowe", "completed": false },
+    { "name": "Ziele angielskie", "completed": false },
+    { "name": "Zioła prowansalskie", "completed": false },
+    { "name": "Ananas w puszce", "completed": true },
+    { "name": "Bakalie", "completed": true },
+    { "name": "Batony twix", "completed": true },
+    { "name": "Budyń 🍮🍮", "completed": true },
+    { "name": "Bułka tarta", "completed": true },
+    { "name": "Cukier 🍬", "completed": true },
+    { "name": "Cukier trzcinowy", "completed": true },
+    { "name": "Cukier wanilinowy", "completed": true },
+    { "name": "Czipsy", "completed": true },
+    { "name": "Dżem truskawkowy", "completed": true },
+    { "name": "Dżem wiśniowy", "completed": true },
+    { "name": "Fasola czerwona ok", "completed": true },
+    { "name": "Fasolka English Breakfast", "completed": true },
+    { "name": "Granola z czekoladą mleczną", "completed": true },
+    { "name": "Groszek w puszce 🫛", "completed": true },
+    { "name": "Groszek z marchewką w słoiku", "completed": true },
+    { "name": "Herbata", "completed": true },
+    { "name": "Jabłka suszone", "completed": true },
+    { "name": "Jajka 🥚 X2", "completed": true },
+    { "name": "Kapary", "completed": true },
+    { "name": "Kasza manna", "completed": true },
+    { "name": "Kawa", "completed": true },
+    { "name": "Kawa Tchibo", "completed": true },
+    { "name": "Ketchup ♨️", "completed": true },
+    { "name": "Konfitura 🫙 wiśniowa", "completed": true },
+    { "name": "Krakersiki", "completed": true },
+    { "name": "Kukurydza w puszce 🌽", "completed": true },
+    { "name": "Kuskus", "completed": true },
+    { "name": "Majonez (Winiary)", "completed": true },
+    { "name": "Makaron kokardki x2", "completed": true },
+    { "name": "Makaron rosołowy", "completed": true },
+    { "name": "Makaron rurki lub kokardki *2 🍝", "completed": true },
+    { "name": "Makaron ryżowy", "completed": true },
+    { "name": "Masło orzechowe bez kawałków orzechów, gładkie 🥜", "completed": true },
+    { "name": "Mąka pszenna tortowa, szymanowska", "completed": true },
+    { "name": "Mąka pszenna zwykła", "completed": true },
+    { "name": "Mąka ryżowa", "completed": true },
+    { "name": "Miód 🐝", "completed": true },
+    { "name": "Musztarda francuska", "completed": true },
+    { "name": "Nerkowiec", "completed": true },
+    { "name": "Nutella", "completed": true },
+    { "name": "Ocet", "completed": true },
+    { "name": "oliwki zielone nadziewane", "completed": true },
+    { "name": "Orzechy włoskie", "completed": true },
+    { "name": "Paluszki", "completed": true },
+    { "name": "Paluszki grissini 🌾", "completed": true },
+    { "name": "Panierka panko", "completed": true },
+    { "name": "Papryka mielona słodka breath of", "completed": true },
+    { "name": "Pestki słonecznika", "completed": true },
+    { "name": "Pestki z dyni", "completed": true },
+    { "name": "Płatki Cheerios", "completed": true },
+    { "name": "Płatki owsiane górskie", "completed": true },
+    { "name": "Pringles", "completed": true },
+    { "name": "Rodzynki", "completed": true },
+    { "name": "Rybki słone", "completed": true },
+    { "name": "Ryż biały 🍚", "completed": true },
+    { "name": "Słodka papryka przyprawa", "completed": true },
+    { "name": "Sok malinowy", "completed": true },
+    { "name": "Sok w kartonie (multiwitamina) *2", "completed": true },
+    { "name": "Sos pomidorowy *3 🍅 mutti", "completed": true },
+    { "name": "Sól himalajska ⛰", "completed": true },
+    { "name": "Spaghetti cienki", "completed": true },
+    { "name": "Spaghetti express", "completed": true },
+    { "name": "Suszone pomidory", "completed": true },
+    { "name": "Tuńczyk w sosie własnym 🐟", "completed": true },
+    { "name": "Wino białe", "completed": true },
+    { "name": "Żurawina suszona", "completed": true }
+  ],
+  "Mrożone 🧊❄️🥶": [
+    { "name": "Fasolka zielona", "completed": true },
+    { "name": "Frytki", "completed": true },
+    { "name": "Lody", "completed": true },
+    { "name": "Marcheweczki 🥕", "completed": true },
+    { "name": "Paluszki rybne", "completed": true },
+    { "name": "Trio warzywne", "completed": true }
+  ],
+  "Chemia 🧪": [
+    { "name": "Proszek do prania kolorowego Vizir/Ariel/Persil", "completed": false },
+    { "name": "Chusteczki nawilżane", "completed": true },
+    { "name": "Chusteczki ppl", "completed": true },
+    { "name": "Dezodorant", "completed": true },
+    { "name": "Duży ręcznik papierowy", "completed": true },
+    { "name": "Elektrolity", "completed": true },
+    { "name": "Gąbka", "completed": true },
+    { "name": "Kulki", "completed": true },
+    { "name": "Kwasek cytrynowy x10", "completed": true },
+    { "name": "Mokre chusteczki", "completed": true },
+    { "name": "Mydło", "completed": true },
+    { "name": "Odżywka Pantene duza", "completed": true },
+    { "name": "Papier toaletowy", "completed": true },
+    { "name": "Pasta do zębów", "completed": true },
+    { "name": "Płyn do prania", "completed": true },
+    { "name": "Ręczniki papierowe", "completed": true },
+    { "name": "Sól do zmywarki", "completed": true },
+    { "name": "Szampon Pantene duza", "completed": true },
+    { "name": "Ściereczka", "completed": true },
+    { "name": "Tabletki do zmywarki zelowe", "completed": true },
+    { "name": "Waciki płatki do twarzy", "completed": true },
+    { "name": "Witaminki rozpuszczalne", "completed": true },
+    { "name": "Woda", "completed": true },
+    { "name": "Worki na śmieci 60l ciemne", "completed": true },
+    { "name": "Ziemia kwiatowa", "completed": true },
+    { "name": "Żel pod pryschic", "completed": true },
+    { "name": "Płyn do zmywania naczyń", "completed": false }
+  ]
+};
+
+const initialRecipes = {
+    "Spaghetti Carbonara": [
+        { category: "Suche 🍚☕☕", name: "Spaghetti cienki" },
+        { category: "Nabiał 🐄", name: "Gran padano 🧀" },
+        { category: "Suche 🍚☕☕", name: "Jajka 🥚 X2" },
+        { category: "Mięso śniadanie kolacja 🍔", name: "🥓 boczek" }
     ]
 };
 
 let shoppingData = {};
+let recipesData = {};
+let tempRecipeIngredients = [];
 
 function isConfigured() {
     return BIN_ID && BIN_ID !== 'TUTAJ_WKLEJ_SWOJ_BIN_ID' && API_KEY && !API_KEY.includes('TUTAJ_WKLEJ');
@@ -460,11 +755,17 @@ async function syncWithCloud(showAlert = false) {
         if (!response.ok) throw new Error("Błąd sieci");
         const resData = await response.json();
         if (resData && resData.record) {
-            shoppingData = resData.record;
+            if (resData.record.shopping) {
+                shoppingData = resData.record.shopping;
+                recipesData = resData.record.recipes || initialRecipes;
+            } else {
+                shoppingData = resData.record;
+                recipesData = initialRecipes;
+            }
             saveLocal();
             render();
             updateStatus("Zsynchronizowano z chmurą", "sync");
-            if (showAlert) alert("Lista została pobrana i zsynchronizowana!");
+            if (showAlert) alert("Dane zostały pobrane i zsynchronizowana!");
         }
     } catch (e) {
         updateStatus("Błąd synchronizacji (tryb offline)", "error");
@@ -484,7 +785,7 @@ async function saveToCloud() {
                 'Content-Type': 'application/json',
                 'X-Master-Key': API_KEY
             },
-            body: JSON.stringify(shoppingData)
+            body: JSON.stringify({ shopping: shoppingData, recipes: recipesData })
         });
         updateStatus("Zsynchronizowano z chmurą", "sync");
     } catch (e) {
@@ -493,16 +794,12 @@ async function saveToCloud() {
 }
 
 function loadLocalFallback() {
-    const saved = localStorage.getItem('simple_shopping_list_data_v14');
-    if (saved) {
-        try {
-            shoppingData = JSON.parse(saved);
-        } catch (e) {
-            shoppingData = JSON.parse(JSON.stringify(initialData));
-        }
-    } else {
-        shoppingData = JSON.parse(JSON.stringify(initialData));
-    }
+    const savedShopping = localStorage.getItem('app_shopping_data_v19');
+    const savedRecipes = localStorage.getItem('app_recipes_data_v19');
+
+    shoppingData = savedShopping ? JSON.parse(savedShopping) : JSON.parse(JSON.stringify(initialData));
+    recipesData = savedRecipes ? JSON.parse(savedRecipes) : JSON.parse(JSON.stringify(initialRecipes));
+    
     render();
     if (!isConfigured()) {
         updateStatus("Tryb lokalny (skonfiguruj JSONBin)", "local");
@@ -510,9 +807,128 @@ function loadLocalFallback() {
 }
 
 function saveLocal() {
-    localStorage.setItem('simple_shopping_list_data_v14', JSON.stringify(shoppingData));
+    localStorage.setItem('app_shopping_data_v19', JSON.stringify(shoppingData));
+    localStorage.setItem('app_recipes_data_v19', JSON.stringify(recipesData));
 }
 
+// Logika przepisów
+function updateCategorySelectOptions() {
+    const select = document.getElementById('recipeCategorySelect');
+    if (!select) return;
+    select.innerHTML = '';
+    Object.keys(shoppingData).forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+    });
+    updateRecipeAutocomplete();
+}
+
+function updateRecipeAutocomplete() {
+    const cat = document.getElementById('recipeCategorySelect').value;
+    const datalist = document.getElementById('recipeAutocompleteList');
+    if (!datalist) return;
+    datalist.innerHTML = '';
+    
+    if (shoppingData[cat]) {
+        shoppingData[cat].forEach(item => {
+            let itemName = typeof item === 'string' ? item : item.name;
+            const opt = document.createElement('option');
+            opt.value = itemName;
+            datalist.appendChild(opt);
+        });
+    }
+}
+
+function addIngredientToTempRecipe() {
+    const cat = document.getElementById('recipeCategorySelect').value;
+    const input = document.getElementById('recipeIngredientInput');
+    const val = input.value.trim();
+    if (!val) return;
+
+    tempRecipeIngredients.push({ category: cat, name: val });
+    input.value = '';
+    renderTempIngredients();
+}
+
+function removeTempIngredient(index) {
+    tempRecipeIngredients.splice(index, 1);
+    renderTempIngredients();
+}
+
+function renderTempIngredients() {
+    const list = document.getElementById('tempIngredientsList');
+    if (!list) return;
+    if (tempRecipeIngredients.length === 0) {
+        list.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">Brak składników w tym przepisie. Dodaj składniki powyżej.</span>';
+        return;
+    }
+    list.innerHTML = '';
+    tempRecipeIngredients.forEach((ing, idx) => {
+        const li = document.createElement('li');
+        li.className = 'temp-ingredient-tag';
+        li.innerHTML = `[${ing.category.split(' ')[0]}] ${escapeHtml(ing.name)} <span onclick="removeTempIngredient(${idx})">&times;</span>`;
+        list.appendChild(li);
+    });
+}
+
+function saveNewRecipe() {
+    const nameInput = document.getElementById('newRecipeName');
+    const recipeName = nameInput.value.trim();
+    if (!recipeName) {
+        alert("Podaj nazwę przepisu!");
+        return;
+    }
+    if (tempRecipeIngredients.length === 0) {
+        alert("Dodaj przynajmniej jeden składnik do przepisu!");
+        return;
+    }
+
+    recipesData[recipeName] = [...tempRecipeIngredients];
+    nameInput.value = '';
+    tempRecipeIngredients = [];
+    renderTempIngredients();
+    saveToCloud();
+    render();
+}
+
+function deleteRecipe(recipeName) {
+    if (confirm(`Usunąć przepis "${recipeName}"?`)) {
+        delete recipesData[recipeName];
+        saveToCloud();
+        render();
+    }
+}
+
+function cookRecipe(recipeName) {
+    const ingredients = recipesData[recipeName];
+    if (!ingredients) return;
+
+    ingredients.forEach(ing => {
+        let cat = ing.category;
+        let ingName = ing.name;
+
+        if (!shoppingData[cat]) {
+            shoppingData[cat] = [];
+        }
+
+        shoppingData[cat] = shoppingData[cat].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
+
+        let existing = shoppingData[cat].find(i => i.name.toLowerCase() === ingName.toLowerCase());
+        if (existing) {
+            existing.completed = false; // Odznacz, żeby było do kupienia
+        } else {
+            shoppingData[cat].push({ name: ingName, completed: false }); // Dodaj jako do kupienia
+        }
+    });
+
+    saveToCloud();
+    render();
+    alert(`Przepis "${recipeName}" został zastosowany! Składniki dodano/odznaczono na liście zakupów.`);
+}
+
+// Logika listy zakupów
 function startNewShopping() {
     if (confirm("Rozpocząć nowe zakupy? Wszystkie artykuły zostaną zaznaczone (skreślone), aby można je było odznaczać w trakcie zakupów.")) {
         Object.keys(shoppingData).forEach(cat => {
@@ -545,8 +961,6 @@ function editItem(category, index) {
             shoppingData[category] = items;
             saveToCloud();
             render();
-        } else {
-            alert("Nazwa artykułu nie może być pusta!");
         }
     }
 }
@@ -559,13 +973,18 @@ function deleteItem(category, index) {
     render();
 }
 
-function addItem(category, event) {
+function addItem(category, catIndex, event) {
     event.preventDefault();
-    const input = document.getElementById(`input-${category}`);
+    const input = document.getElementById(`input-${catIndex}`);
     const val = input.value.trim();
     if (val) {
         let items = shoppingData[category].map(i => typeof i === 'string' ? { name: i, completed: false } : i);
-        items.push({ name: val, completed: false });
+        let existing = items.find(i => i.name.toLowerCase() === val.toLowerCase());
+        if (existing) {
+            existing.completed = false; // Odznacz, jeśli już istniał na liście
+        } else {
+            items.push({ name: val, completed: false });
+        }
         shoppingData[category] = items;
         input.value = '';
         saveToCloud();
@@ -589,27 +1008,46 @@ function addNewCategory() {
 }
 
 function render() {
+    updateCategorySelectOptions();
+
+    // Renderowanie przepisów
+    const recipesGrid = document.getElementById('recipesGrid');
+    recipesGrid.innerHTML = '';
+    const recipeKeys = Object.keys(recipesData);
+
+    if (recipeKeys.length === 0) {
+        recipesGrid.innerHTML = '<span style="color: var(--text-muted); font-size: 0.9rem;">Brak zapisanych przepisów.</span>';
+    } else {
+        recipeKeys.forEach(rName => {
+            const ingList = recipesData[rName].map(i => i.name).join(', ');
+            const card = document.createElement('div');
+            card.className = 'recipe-card';
+            card.innerHTML = `
+                <div>
+                    <h3 class="recipe-title">${escapeHtml(rName)}</h3>
+                    <div class="recipe-ingredients-preview">Składniki: ${escapeHtml(ingList)}</div>
+                </div>
+                <div class="recipe-actions">
+                    <button onclick="cookRecipe('${rName.replace(/'/g, "\\'")}')" class="btn-success">Zrób danie</button>
+                    <button onclick="deleteRecipe('${rName.replace(/'/g, "\\'")}')" class="item-action-btn delete-btn" title="Usuń przepis">&times;</button>
+                </div>
+            `;
+            recipesGrid.appendChild(card);
+        });
+    }
+
+    // Renderowanie listy zakupów
     const grid = document.getElementById('categoriesGrid');
     grid.innerHTML = '';
 
-    const categories = Object.keys(shoppingData);
-
-    categories.forEach(category => {
+    Object.keys(shoppingData).forEach((category, catIndex) => {
         let items = shoppingData[category] || [];
-        items = items.map(item => {
-            if (typeof item === 'string') {
-                return { name: item, completed: false };
-            }
-            return item;
-        });
+        items = items.map(item => typeof item === 'string' ? { name: item, completed: false } : item);
 
         items.sort((a, b) => {
-            if (a.completed !== b.completed) {
-                return a.completed ? 1 : -1;
-            }
+            if (a.completed !== b.completed) return a.completed ? 1 : -1;
             return a.name.localeCompare(b.name, 'pl', { sensitivity: 'base' });
         });
-
         shoppingData[category] = items;
 
         const card = document.createElement('div');
@@ -636,6 +1074,11 @@ function render() {
             `;
         });
 
+        let datalistOptions = '';
+        items.forEach(item => {
+            datalistOptions += `<option value="${escapeHtml(item.name)}">`;
+        });
+
         card.innerHTML = `
             <div class="category-header">
                 <div class="category-title-wrapper">
@@ -646,8 +1089,11 @@ function render() {
             <ul class="item-list">
                 ${itemsHtml || '<li style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 10px;">Brak artykułów</li>'}
             </ul>
-            <form class="add-item-form" onsubmit="addItem('${category.replace(/'/g, "\\'")}', event)">
-                <input type="text" id="input-${category}" class="add-item-input" placeholder="Dodaj artykuł...">
+            <form class="add-item-form" onsubmit="addItem('${category.replace(/'/g, "\\'")}', ${catIndex}, event)">
+                <input type="text" id="input-${catIndex}" list="datalist-${catIndex}" class="add-item-input" placeholder="Dodaj lub wyszukaj...">
+                <datalist id="datalist-${catIndex}">
+                    ${datalistOptions}
+                </datalist>
                 <button type="submit" class="btn-primary">+</button>
             </form>
         `;
